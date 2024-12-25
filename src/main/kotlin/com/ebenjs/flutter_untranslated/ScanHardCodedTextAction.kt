@@ -166,8 +166,17 @@ class ScanHardCodedTextAction : AnAction() {
 
         filterButton.addActionListener {
             val query = searchField.text.lowercase()
-            val filteredResults = results.filter { it["text"]!!.lowercase().contains(query) }
+            val filteredResults = results.filter {
+                it["text"]!!.lowercase().contains(query)
+            }
             resultTextArea.text = generateTextWithLinks(filteredResults, project)
+            resultTextArea.text = """
+            <html>
+                <body style="font-family: JetBrains Mono; font-size: 10px">
+                    ${generateTextWithLinks(filteredResults, project)}
+                </body>
+            </html>
+            """.trimIndent()
         }
 
         resetButton.addActionListener {
@@ -296,16 +305,20 @@ class ScanHardCodedTextAction : AnAction() {
     }
 
     private suspend fun writeArbFile(file: File, language: String, results: List<HashMap<String, String>>): Boolean {
-        file.writeText("{\n")
-        groupedResults.forEach { (key, currentText) ->
+        file.writeText("{\n\t")
+        results.forEach { result ->
+            val currentFile = result["file"]!!
+            val currentText = result["text"]!!
             val currentTextList = currentText.split("Hardcoded Text: ")
-            val currentSafeText = currentTextList[currentTextList.size - 1]
-            if (currentSafeText.trim().isNotEmpty()) {
-                val translation = translateTextWithHuggingFace(currentSafeText, language)
-                if (translation != "Null") {
-                    file.appendText("\"${createMeaningFullKeyFrom(key, currentSafeText)}\": \"$translation\",\n")
+            currentTextList.forEach { text ->
+                if (text.trim().isNotEmpty()) {
+                    val translation = translateTextWithHuggingFace(text, language)
+                    if (translation != "Null") {
+                        file.appendText("\t\"${createMeaningFullKeyFrom(safeFileName(currentFile), text)}\":\"$translation\",\n")
+                    }
                 }
             }
+
         }
         file.appendText("}")
         return true
@@ -369,17 +382,18 @@ class ScanHardCodedTextAction : AnAction() {
     }
 
     private suspend fun parseTranslationResponse(response: HttpResponse): String {
-        val body = response.body<String>().toString()
-        val translation = body.substring(body.indexOf(":") + 2, body.length - 3)
-        return translation
+        var body = response.body<String>().toString()
+        body = body.replace("[", "").replace("]", "").replace("{", "").replace("}", "").replace("\"", "").replace("\\", "")
+        body = body.split(":").last()
+        return body
     }
 
-    fun setApiKey(apiKey: String) {
+    private fun setApiKey(apiKey: String) {
         val prefs = Preferences.userRoot().node("com/ebenjs/flutter_untranslated")
         prefs.put("huggingFaceApiKey", apiKey)
     }
 
-    fun getApiKey(): String? {
+    private fun getApiKey(): String? {
         val prefs = Preferences.userRoot().node("com/ebenjs/flutter_untranslated")
         return prefs.get("huggingFaceApiKey", null)
     }
