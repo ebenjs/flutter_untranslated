@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.ebenjs"
-version = "1.0-SNAPSHOT"
+version = "1.0.2-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -52,6 +52,6 @@ tasks {
     }
 
     publishPlugin {
-        token.set(System.getenv("PUBLISH_TOKEN"))
+        token = providers.gradleProperty("intellijPlatformPublishingToken")
     }
 }
