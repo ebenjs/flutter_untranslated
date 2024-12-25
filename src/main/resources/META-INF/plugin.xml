@@ -1,21 +1,14 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
     <id>com.ebenjs.flutter_untranslated</id>
-
-    <!-- Public plugin name should be written in Title Case.
-         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
-    <name>Flutter_untranslated</name>
-
-    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@yourcompany.com" url="https://www.yourcompany.com">YourCompany</vendor>
-
+    <name>Flutter Untranslated</name>
+    <vendor email="nikaboue10@gmail.com" url="https://ebenjs.tech">ebenjs</vendor>
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+        <h2>Flutter Untranslated</h2>
+        <p>Scan all Dart files for hard-coded Text widgets</p>
   ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -31,11 +24,11 @@
     <actions>
         <action id="ScanHardCodedTextAction"
                 class="com.ebenjs.flutterhardcodetextscanner.ScanHardCodedTextAction"
-                text="Scan Hard-Coded Text"
+                text="Flutter Untranslated"
                 description="Scan all Dart files for hard-coded Text widgets"
                 >
             <add-to-group group-id="ToolsMenu" anchor="last"/>
-            <keyboard-shortcut first-keystroke="ctrl alt H" keymap="$default"/>
+            <keyboard-shortcut first-keystroke="ctrl alt U" keymap="$default"/>
         </action>
     </actions>
 </idea-plugin>

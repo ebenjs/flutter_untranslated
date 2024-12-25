@@ -50,7 +50,6 @@ class ScanHardCodedTextAction : AnAction() {
         if (hardCodedTexts.isEmpty()) {
             println("Aucun texte codé en dur trouvé.")
         } else {
-            println("Textes codés en dur trouvés :")
             showResults(project, hardCodedTexts)
         }
     }
@@ -96,7 +95,7 @@ class ScanHardCodedTextAction : AnAction() {
         if (toolWindow == null) {
             toolWindow = toolWindowManager.registerToolWindow(
                 RegisterToolWindowTask(
-                    id = "Hardcoded Text Finder",
+                    id = "Flutter Untranslated",
                     anchor = ToolWindowAnchor.BOTTOM,
                     canCloseContent = true
                 )
